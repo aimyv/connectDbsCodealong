@@ -1,0 +1,15 @@
+{
+  "name": "client",
+  "scripts": {
+    "build": "browserify",
+    "dev": "concurrently \"watchify ./script.js -o bundle.js\" \"http-server\""
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "concurrently": "^6.0.0",
+    "watchify": "^4.0.0"
+  },
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
+}
