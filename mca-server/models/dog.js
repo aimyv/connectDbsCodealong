@@ -1,4 +1,3 @@
-// const dogData = require("../../db/dogs");
 const { init } = require('../initdb');
 
 class Dog {
@@ -21,6 +20,51 @@ class Dog {
             }
         })
     }
+
+    static findByName(name){
+        return new Promise (async (resolve, reject) => {
+            try {
+                const db = await init()
+                const dbData = await db.collection('dogs').find({}).toArray()
+                const dog = dbData.filter((dog) => dog.name == name)[0];
+                if (!dog) { throw new Error('No Doggo here!') }
+                resolve(new Dog(dog));
+            } catch (err) {
+                reject(`Error retrieving dog: ${err.message}`)
+            }
+        })
+    }
+
+    static create(dog){
+        return new Promise (async (resolve, reject) => {
+            try {
+                const db = await init()
+                const newDog = new Dog({
+                    ...dog
+                })
+                const dbData = await db.collection('dogs').insertOne(newDog)
+                resolve(dbData);
+                console.log(newDog)
+            } catch (err) {
+                reject(`Error adding dog: ${err.message}`)
+            }
+        })
+    }
+
+    static destroy(name){
+        return new Promise (async (resolve, reject) => {
+            try {
+                const db = await init()
+                const kill = db.collection('dogs').deleteOne({"name": name})
+                if (!kill) { throw new Error("Ruh-roh! You can't kill me!") }
+                resolve()
+            } catch (err) {
+                reject(`Error deleting dog: ${err.message}`)
+            }
+        })
+    }
+
+    
 }
 
 module.exports = Dog;
