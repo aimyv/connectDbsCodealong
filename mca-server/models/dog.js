@@ -34,6 +34,18 @@ class Dog {
         })
     }
 
+    static update(name){
+        return new Promise (async (resolve, reject) => {
+            try {
+                let dogData = await pool.query(`UPDATE dogs SET age = age + 1 WHERE name = $1 RETURNING *;`, [name]);
+                let updatedDog = new Dog(dogData.rows[0]);
+                resolve (updatedDog);
+            } catch (err) {
+                reject(`Error updating dogs: ${err.message}`)
+            }
+        });
+    }
+
     static create(name, age){
         return new Promise (async (resolve, reject) => {
             try {

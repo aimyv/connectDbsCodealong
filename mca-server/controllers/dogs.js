@@ -35,6 +35,17 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.put('/:name', async (req, res) => {
+    try {
+        const name = req.params.name;
+        const editedDog = await Dog.update(name);
+        res.staus(202).send(editedDog);
+    } catch(err) {
+        console.error(err);
+        res.status(500),json({ error: err });
+    }
+})
+
 router.delete('/:name', async (req, res) => {
     try {
         const name = req.params.name;
