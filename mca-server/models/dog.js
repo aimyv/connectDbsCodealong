@@ -8,6 +8,19 @@ class Dog {
         this.age = data.age;
     }
 
+    static get all(){
+        return new Promise ( async (resolve, reject) => {
+            try {
+                const dogsData = await pool.query(`SELECT * FROM dogs;`)
+                const dogs = dogsData.rows.map(d => new Dog(d))
+                if (!dogs.length) { throw new Error('No doggos here') }
+                resolve(dogs);
+            } catch (err) {
+                reject(`Error retrieving dogs: ${err.message}`)
+            }
+        })
+    }
+
     static getByName(name){
         return new Promise ( async (resolve, reject) => {
             try {
@@ -21,13 +34,12 @@ class Dog {
         })
     }
 
-    static get all(){
+    static create(dog) {
         return new Promise ( async (resolve, reject) => {
             try {
-                const dogsData = await pool.query(`SELECT * FROM dogs;`)
-                const dogs = dogsData.rows.map(d => new Dog(d))
-                if (!dogs.length) { throw new Error('No doggos here') }
-                resolve(dogs);
+                const dogData = await pool.query(`INSERT INTO dogs VALUES ($1);`, [dog])
+                if (!dogData) { throw new Error("Ruh-roh! Can't add a new dog at the moment!") }
+                resolve();
             } catch (err) {
                 reject(`Error retrieving dogs: ${err.message}`)
             }
