@@ -24,7 +24,7 @@ class Dog {
     static getByName(name){
         return new Promise ( async (resolve, reject) => {
             try {
-                const dogData = await pool.query(`SELECT name FROM dogs WHERE name = $1;`, [name])
+                const dogData = await pool.query(`SELECT * FROM dogs WHERE name = $1;`, [name])
                 const dog = new Dog(dogData.rows[0])
                 if (!dog) { throw new Error('No doggos here') }
                 resolve(dog);
@@ -44,6 +44,17 @@ class Dog {
                 reject(`Error creating dogs: ${err.message}`)
             }
         });
+    }
+
+    static destroy(name){
+        return new Promise (async (resolve, reject) => {
+            try {
+                await pool.query(`DELETE FROM dogs WHERE name = $1;`, [ name ]);
+                resolve('Dog was deleted')
+            } catch (err) {
+                reject(`Error deleting dog: ${err.message}`)
+            }
+        })
     }
 }
 
