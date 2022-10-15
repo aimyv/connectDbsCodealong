@@ -54,12 +54,12 @@ class Dog {
         return new Promise (async (resolve, reject) => {
             try {
                 const db = await init()
-                const dbData = await db.collection('dogs').updateOne({name: name}, {$inc: {year: 1}}).toArray();
-                resolve(dbData);
+                let editedDog = await db.collection('dogs').updateOne({name: name}, {$inc: {age: 1}})
+                resolve (editedDog);
             } catch (err) {
-                reject(`Error updating dog: ${err.message}`)
+                reject(`Error updating dogs: ${err.message}`)
             }
-        })
+        });
     }
 
     static destroy(name){
