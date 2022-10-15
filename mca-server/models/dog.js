@@ -44,9 +44,20 @@ class Dog {
                 })
                 const dbData = await db.collection('dogs').insertOne(newDog)
                 resolve(dbData);
-                console.log(newDog)
             } catch (err) {
                 reject(`Error adding dog: ${err.message}`)
+            }
+        })
+    }
+
+    static update(name){
+        return new Promise (async (resolve, reject) => {
+            try {
+                const db = await init()
+                const dbData = await db.collection('dogs').updateOne({name: name}, {$inc: {year: 1}}).toArray();
+                resolve(dbData);
+            } catch (err) {
+                reject(`Error updating dog: ${err.message}`)
             }
         })
     }
